@@ -67,7 +67,10 @@ lib/
 
 ## API Integration
 
-Aplikasi ini menggunakan REST API untuk operasi CRUD transaksi.
+Aplikasi ini menggunakan public REST API untuk operasi CRUD transaksi.
+
+Contoh: https://invenx-backend-app.up.railway.app/transactions
+
 
 **Endpoints yang digunakan:**
 - `GET /transactions/summary` - Ambil ringkasan saldo
