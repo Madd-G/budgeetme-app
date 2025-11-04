@@ -15,6 +15,9 @@ class TransactionList extends _$TransactionList {
 
   @override
   Future<List<Transaction>> build() async {
+
+    ref.watch(categoryFilterProvider);
+
     _currentPage = 1;
     _hasMore = true;
     _allTransactions = [];
