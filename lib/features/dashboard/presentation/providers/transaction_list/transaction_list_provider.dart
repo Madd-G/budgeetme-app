@@ -11,65 +11,61 @@ class TransactionList extends _$TransactionList {
   int _currentPage = 1;
   bool _hasMore = true;
   List<Transaction> _allTransactions = [];
+  bool _isLoadingMore = false;
 
   @override
   Future<List<Transaction>> build() async {
     _currentPage = 1;
     _hasMore = true;
     _allTransactions = [];
+    _isLoadingMore = false;
 
     return _loadPage(1);
   }
 
   Future<List<Transaction>> _loadPage(int page) async {
-    final categoryId = ref.watch(categoryFilterProvider);
-    final dataSource = ref.watch(dashboardRemoteDataSourceProvider);
+    final categoryId = ref.read(categoryFilterProvider);
+    final dataSource = ref.read(dashboardRemoteDataSourceProvider);
 
-    if (categoryId != null) {
-      final remotes = await dataSource.fetchTransactionsByCategory(
-        categoryId: categoryId,
-        page: page,
-      );
-      final transactions = remotes.map((r) => r.toEntity()).toList();
+    final response = categoryId != null
+        ? await dataSource.fetchTransactionsByCategory(
+            categoryId: categoryId,
+            page: page,
+          )
+        : await dataSource.fetchTransactions(page: page);
 
-      if (page == 1) {
-        _allTransactions = transactions;
-      } else {
-        _allTransactions.addAll(transactions);
-      }
+    final transactions = response.data.map((model) => model.toEntity()).toList();
 
-      _hasMore = transactions.length >= 10;
-      _currentPage = page;
-
-      return List.from(_allTransactions);
+    if (page == 1) {
+      _allTransactions = transactions;
     } else {
-      final remotes = await dataSource.fetchTransactions(page: page);
-      final transactions = remotes.map((r) => r.toEntity()).toList();
-
-      if (page == 1) {
-        _allTransactions = transactions;
-      } else {
-        _allTransactions.addAll(transactions);
-      }
-
-      _hasMore = transactions.length >= 10;
-      _currentPage = page;
-
-      return List.from(_allTransactions);
+      _allTransactions.addAll(transactions);
     }
+
+    _hasMore = response.hasMore;
+    _currentPage = page;
+
+    return List.from(_allTransactions);
   }
 
   Future<void> loadMore() async {
-    if (!_hasMore || state.isLoading) return;
+    if (!_hasMore || state.isLoading || _isLoadingMore) return;
 
-    final nextPage = _currentPage + 1;
-    state = await AsyncValue.guard(() => _loadPage(nextPage));
+    _isLoadingMore = true;
+    try {
+      final nextPage = _currentPage + 1;
+      state = await AsyncValue.guard(() => _loadPage(nextPage));
+    } finally {
+      _isLoadingMore = false;
+    }
   }
 
   Future<void> refresh() async {
     _currentPage = 1;
     _hasMore = true;
     _allTransactions = [];
+    _isLoadingMore = false;
+    
     state = const AsyncLoading();
     state = await AsyncValue.guard(() => _loadPage(1));
 

@@ -32,13 +32,13 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future<List<Transaction>> fetchTransactions({
     DashboardTransactionFilter? filter,
   }) async {
-    final data = filter?.categoryId != null
+    final response = filter?.categoryId != null
         ? await _dataSource.fetchTransactionsByCategory(
             categoryId: filter!.categoryId!,
           )
         : await _dataSource.fetchTransactions();
 
-    return data.map((d) => d.toEntity()).toList();
+    return response.data.map((d) => d.toEntity()).toList();
   }
 
   @override

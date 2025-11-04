@@ -5,6 +5,7 @@ import 'package:budgeetme/core/exceptions/app_exception.dart';
 import 'package:budgeetme/core/network/api_client.dart';
 import 'package:budgeetme/features/transaction/data/models/transaction_model.dart';
 import 'package:budgeetme/features/dashboard/data/models/dashboard_summary_model.dart';
+import 'package:budgeetme/features/dashboard/data/models/transaction_paginated_response.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,7 +37,7 @@ class DashboardRemoteDataSource {
     }
   }
 
-  Future<List<TransactionModel>> fetchTransactions({int page = 1}) async {
+  Future<TransactionPaginatedResponse> fetchTransactions({int page = 1}) async {
     try {
       final response = await _apiClient.get(
         '${AppConstants.transactionsPaginated}?page=$page',
@@ -44,17 +45,10 @@ class DashboardRemoteDataSource {
       final data = response.data;
       if (data == null) {
         log('[TransactionDataSource] Response data is null');
-        return const <TransactionModel>[];
+        throw ApiException('Empty response loading transactions');
       }
 
-      final list = data['data'] as List<dynamic>? ?? <dynamic>[];
-
-      final transactions = list
-          .whereType<Map<String, dynamic>>()
-          .map(TransactionModel.fromJson)
-          .toList();
-
-      return transactions;
+      return TransactionPaginatedResponse.fromJson(data);
     } on DioException catch (error) {
       throw NetworkException('Failed to load transactions', cause: error);
     } catch (error, stackTrace) {
@@ -64,7 +58,7 @@ class DashboardRemoteDataSource {
     }
   }
 
-  Future<List<TransactionModel>> fetchTransactionsByCategory({
+  Future<TransactionPaginatedResponse> fetchTransactionsByCategory({
     required int categoryId,
     int page = 1,
   }) async {
@@ -74,13 +68,9 @@ class DashboardRemoteDataSource {
       );
       final data = response.data;
       if (data == null) {
-        return const <TransactionModel>[];
+        throw ApiException('Empty response loading category transactions');
       }
-      final list = data['data'] as List<dynamic>? ?? <dynamic>[];
-      return list
-          .whereType<Map<String, dynamic>>()
-          .map(TransactionModel.fromJson)
-          .toList();
+      return TransactionPaginatedResponse.fromJson(data);
     } on DioException catch (error) {
       throw NetworkException(
         'Failed to load transactions by category',
