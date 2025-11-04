@@ -1,3 +1,4 @@
+import 'package:budgeetme/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_filter.dart';
 import 'package:budgeetme/features/dashboard/domain/repositories/dashboard_repository.dart';
@@ -7,7 +8,8 @@ part 'fetch_dashboard_summary_usecase.g.dart';
 
 @riverpod
 FetchDashboardSummaryUseCase fetchDashboardSummaryUseCase(Ref ref) {
-  throw UnimplementedError('Provider must be overridden');
+  final repository = ref.watch(dashboardRepositoryProvider);
+  return FetchDashboardSummaryUseCase(repository);
 }
 
 class FetchDashboardSummaryUseCase {

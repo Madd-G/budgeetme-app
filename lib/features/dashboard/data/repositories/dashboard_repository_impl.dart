@@ -1,8 +1,8 @@
 import 'package:budgeetme/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_filter.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/paginated_transactions.dart';
 import 'package:budgeetme/features/dashboard/domain/repositories/dashboard_repository.dart';
-import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dashboard_repository_impl.g.dart';
@@ -29,16 +29,25 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<List<Transaction>> fetchTransactions({
-    DashboardTransactionFilter? filter,
+  Future<PaginatedTransactions> fetchTransactions({
+    required int page,
+    int? categoryId,
   }) async {
-    final response = filter?.categoryId != null
+    final response = categoryId != null
         ? await _dataSource.fetchTransactionsByCategory(
-            categoryId: filter!.categoryId!,
+            categoryId: categoryId,
+            page: page,
           )
-        : await _dataSource.fetchTransactions();
+        : await _dataSource.fetchTransactions(page: page);
 
-    return response.data.map((d) => d.toEntity()).toList();
+    return PaginatedTransactions(
+      data: response.data.map((model) => model.toEntity()).toList(),
+      total: response.total,
+      totalPages: response.totalPages,
+      currentPage: response.currentPage,
+      perPage: response.perPage,
+      categoryId: response.categoryId,
+    );
   }
 
   @override

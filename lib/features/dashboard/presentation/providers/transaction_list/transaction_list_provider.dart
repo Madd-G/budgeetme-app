@@ -1,4 +1,4 @@
-import 'package:budgeetme/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
+import 'package:budgeetme/features/dashboard/domain/usecases/fetch_transactions_usecase.dart';
 import 'package:budgeetme/features/dashboard/presentation/providers/category_filter/category_filter_provider.dart';
 import 'package:budgeetme/features/dashboard/presentation/providers/transaction_summary/transaction_summary_provider.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
@@ -28,21 +28,17 @@ class TransactionList extends _$TransactionList {
 
   Future<List<Transaction>> _loadPage(int page) async {
     final categoryId = ref.read(categoryFilterProvider);
-    final dataSource = ref.read(dashboardRemoteDataSourceProvider);
+    final useCase = ref.read(fetchTransactionsUseCaseProvider);
 
-    final response = categoryId != null
-        ? await dataSource.fetchTransactionsByCategory(
-            categoryId: categoryId,
-            page: page,
-          )
-        : await dataSource.fetchTransactions(page: page);
-
-    final transactions = response.data.map((model) => model.toEntity()).toList();
+    final response = await useCase.execute(
+      page: page,
+      categoryId: categoryId,
+    );
 
     if (page == 1) {
-      _allTransactions = transactions;
+      _allTransactions = response.data;
     } else {
-      _allTransactions.addAll(transactions);
+      _allTransactions.addAll(response.data);
     }
 
     _hasMore = response.hasMore;

@@ -49,4 +49,4 @@ final class TransactionSummaryProvider
 }
 
 String _$transactionSummaryHash() =>
-    r'f24a20947f1917270ea3bcc43e63742b26245adc';
+    r'63d39a0df34b4e74257cb54c44b254231a0a1b9e';

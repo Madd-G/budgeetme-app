@@ -56,4 +56,4 @@ final class FetchDashboardSummaryUseCaseProvider
 }
 
 String _$fetchDashboardSummaryUseCaseHash() =>
-    r'79e9d22e531c6d640a03339a8f24ffa96ed9f881';
+    r'c38a84b7837df591b1292abdad65743624536e4b';
