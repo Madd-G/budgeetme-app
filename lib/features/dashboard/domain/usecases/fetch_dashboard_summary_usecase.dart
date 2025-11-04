@@ -1,5 +1,5 @@
-import 'package:budgeetme/features/dashboard/domain/entities/dashboard_summary.dart';
-import 'package:budgeetme/features/dashboard/domain/entities/transaction_filter.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_filter.dart';
 import 'package:budgeetme/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,14 +15,16 @@ class FetchDashboardSummaryUseCase {
 
   final DashboardRepository _repository;
 
-  Future<DashboardSummary> execute({TransactionFilter? filter}) async {
+  Future<DashboardTransactionSummary> execute({
+    DashboardTransactionFilter? filter,
+  }) async {
     try {
       if (filter?.categoryId != null) {
         return await _repository.fetchCategorySummary(filter!.categoryId!);
       }
       return await _repository.fetchSummary(filter: filter);
     } catch (error) {
-      return DashboardSummary.empty;
+      return DashboardTransactionSummary.empty;
     }
   }
 }

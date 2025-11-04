@@ -17,8 +17,7 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = context.colorScheme;
     final buttonColor = isIncome ? AppColors.income : AppColors.expense;
 
     return SizedBox(
@@ -45,7 +44,7 @@ class SubmitButton extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     isEditing ? 'Simpan Perubahan' : 'Tambah Transaksi',
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: AppFont.titleMedium.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: AppFont.semiBold,
                     ),

@@ -54,8 +54,7 @@ class StatCardDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = context.colorScheme;
 
     return Center(
       child: Padding(
@@ -82,7 +81,7 @@ class StatCardDetailDialog extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(32),
               child: Material(
-                color: colorScheme.surface,
+                color: Colors.transparent,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -112,7 +111,7 @@ class StatCardDetailDialog extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         label,
-                        style: textTheme.titleMedium?.copyWith(
+                        style: AppFont.titleMedium.copyWith(
                           color: colorScheme.onSurface.withValues(alpha: 0.7),
                           fontWeight: AppFont.semiBold,
                         ),
@@ -136,7 +135,7 @@ class StatCardDetailDialog extends StatelessWidget {
                         children: [
                           Text(
                             'Total $label',
-                            style: textTheme.bodySmall?.copyWith(
+                            style: AppFont.bodySmall.copyWith(
                               color: colorScheme.onSurface.withValues(
                                 alpha: 0.6,
                               ),
@@ -146,7 +145,7 @@ class StatCardDetailDialog extends StatelessWidget {
                           const SizedBox(height: 8),
                           SelectableText(
                             amount.toRupiah(),
-                            style: textTheme.headlineLarge?.copyWith(
+                            style: AppFont.headlineLarge.copyWith(
                               color: color,
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.5,

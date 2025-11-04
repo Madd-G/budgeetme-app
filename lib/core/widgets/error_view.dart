@@ -1,19 +1,16 @@
+import 'package:budgeetme/core/theme/app_colors.dart';
+import 'package:budgeetme/core/theme/app_font.dart';
 import 'package:flutter/material.dart';
 
 class ErrorView extends StatelessWidget {
-  const ErrorView({
-    required this.error,
-    this.onRetry,
-    super.key,
-  });
+  const ErrorView({required this.error, this.onRetry, super.key});
 
   final Object error;
   final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = context.colorScheme;
 
     return Center(
       child: Padding(
@@ -21,22 +18,18 @@ class ErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.cloud_off,
-              size: 80,
-              color: colorScheme.error,
-            ),
+            Icon(Icons.cloud_off, size: 80, color: colorScheme.error),
             const SizedBox(height: 16),
             Text(
               'Terjadi Kesalahan',
-              style: textTheme.titleMedium,
+              style: AppFont.titleMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               '$error',
               textAlign: TextAlign.center,
-              style: textTheme.bodyMedium,
+              style: AppFont.bodyMedium,
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 24),

@@ -1,48 +1,35 @@
-import 'package:budgeetme/features/dashboard/domain/entities/dashboard_summary.dart';
-import 'package:budgeetme/features/transaction/data/models/transaction_summary_model.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 
 class DashboardSummaryModel {
   const DashboardSummaryModel({
-    required this.totalIncome,
-    required this.totalExpense,
     required this.balance,
+    required this.income,
+    required this.expenses,
+    this.categoryId,
+    this.categoryName,
   });
 
-  final double totalIncome;
-  final double totalExpense;
   final double balance;
-
-  factory DashboardSummaryModel.fromTransactionSummary(
-    TransactionSummaryModel transactionSummary,
-  ) {
-    return DashboardSummaryModel(
-      totalIncome: transactionSummary.income,
-      totalExpense: transactionSummary.expenses,
-      balance: transactionSummary.balance,
-    );
-  }
+  final double income;
+  final double expenses;
+  final int? categoryId;
+  final String? categoryName;
 
   factory DashboardSummaryModel.fromJson(Map<String, dynamic> json) {
     return DashboardSummaryModel(
-      totalIncome: (json['totalIncome'] as num?)?.toDouble() ?? 0.0,
-      totalExpense: (json['totalExpense'] as num?)?.toDouble() ?? 0.0,
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
+      income: (json['income'] as num?)?.toDouble() ?? 0.0,
+      expenses: (json['expenses'] as num?)?.toDouble() ?? 0.0,
+      categoryId: json['categoryId'] as int?,
+      categoryName: json['categoryName'] as String?,
     );
   }
 
-  DashboardSummary toEntity() {
-    return DashboardSummary(
-      totalIncome: totalIncome,
-      totalExpense: totalExpense,
+  DashboardTransactionSummary toEntity() {
+    return DashboardTransactionSummary(
       balance: balance,
+      totalIncome: income,
+      totalExpense: expenses,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'totalIncome': totalIncome,
-      'totalExpense': totalExpense,
-      'balance': balance,
-    };
   }
 }

@@ -16,16 +16,14 @@ class DatePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = context.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Tanggal',
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: AppFont.semiBold,
-          ),
+          style: AppFont.titleSmall.copyWith(fontWeight: AppFont.semiBold),
         ),
         const SizedBox(height: 12),
         InkWell(
@@ -36,7 +34,7 @@ class DatePickerField extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -44,12 +42,12 @@ class DatePickerField extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                      color: colorScheme.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       Icons.calendar_today_rounded,
-                      color: theme.colorScheme.primary,
+                      color: colorScheme.primary,
                       size: 20,
                     ),
                   ),
@@ -57,14 +55,14 @@ class DatePickerField extends StatelessWidget {
                   Expanded(
                     child: Text(
                       selectedDate.toIndonesianLongFormat(),
-                      style: theme.textTheme.bodyLarge?.copyWith(
+                      style: AppFont.bodyLarge.copyWith(
                         fontWeight: AppFont.semiBold,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
                   ),
                 ],
               ),
@@ -84,11 +82,9 @@ class DatePickerField extends StatelessWidget {
     );
 
     if (pickedDate != null) {
-      onDateSelected(DateTime(
-        pickedDate.year,
-        pickedDate.month,
-        pickedDate.day,
-      ));
+      onDateSelected(
+        DateTime(pickedDate.year, pickedDate.month, pickedDate.day),
+      );
     }
   }
 }

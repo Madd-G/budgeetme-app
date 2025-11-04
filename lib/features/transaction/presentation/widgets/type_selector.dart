@@ -17,7 +17,6 @@ class TypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isIncome = selectedType == TransactionType.income;
 
     return Column(
@@ -25,7 +24,7 @@ class TypeSelector extends StatelessWidget {
       children: [
         Text(
           'Tipe Transaksi',
-          style: theme.textTheme.titleSmall?.copyWith(
+          style: AppFont.bodyLarge.copyWith(
             fontWeight: AppFont.semiBold,
           ),
         ),

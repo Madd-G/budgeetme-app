@@ -6,7 +6,7 @@ class TransactionHistoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.colorScheme;
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -20,7 +20,7 @@ class TransactionHistoryHeader extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             'Riwayat Transaksi',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: AppFont.titleMedium.copyWith(
               fontWeight: AppFont.semiBold,
             ),
           ),

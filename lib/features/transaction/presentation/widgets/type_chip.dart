@@ -21,9 +21,8 @@ class TypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
+    final colorScheme = context.colorScheme;
+
     return Opacity(
       opacity: isEnabled ? 1.0 : 0.5,
       child: InkWell(
@@ -38,7 +37,9 @@ class TypeChip extends StatelessWidget {
                 : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isSelected ? color : colorScheme.outline.withValues(alpha: 0.3),
+              color: isSelected
+                  ? color
+                  : colorScheme.outline.withValues(alpha: 0.3),
               width: isSelected ? 2 : 1,
             ),
           ),

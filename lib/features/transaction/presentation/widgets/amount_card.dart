@@ -20,8 +20,7 @@ class AmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = context.colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -41,8 +40,9 @@ class AmountCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: (isIncome ? AppColors.income : AppColors.expense)
-              .withValues(alpha: 0.2),
+          color: (isIncome ? AppColors.income : AppColors.expense).withValues(
+            alpha: 0.2,
+          ),
           width: 2,
         ),
       ),
@@ -54,25 +54,22 @@ class AmountCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color:
-                      (isIncome ? AppColors.income : AppColors.expense)
-                          .withValues(alpha: 0.15),
+                  color: (isIncome ? AppColors.income : AppColors.expense)
+                      .withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   isIncome
                       ? Icons.arrow_downward_rounded
                       : Icons.arrow_upward_rounded,
-                  color: isIncome
-                      ? AppColors.income
-                      : AppColors.expense,
+                  color: isIncome ? AppColors.income : AppColors.expense,
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 'Jumlah',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: AppFont.titleMedium.copyWith(
                   fontWeight: AppFont.semiBold,
                   color: colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
@@ -87,11 +84,9 @@ class AmountCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   'Rp',
-                  style: theme.textTheme.headlineSmall?.copyWith(
+                  style: AppFont.headlineSmall.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isIncome
-                        ? AppColors.income
-                        : AppColors.expense,
+                    color: isIncome ? AppColors.income : AppColors.expense,
                   ),
                 ),
               ),
@@ -106,17 +101,15 @@ class AmountCard extends StatelessWidget {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     filled: false,
-                    hintStyle: theme.textTheme.displaySmall?.copyWith(
+                    hintStyle: AppFont.headlineLarge.copyWith(
                       fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface.withValues(alpha: 0.2),
                     ),
                     contentPadding: EdgeInsets.zero,
                   ),
-                  style: theme.textTheme.displaySmall?.copyWith(
+                  style: AppFont.headlineLarge.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isIncome
-                        ? AppColors.income
-                        : AppColors.expense,
+                    color: isIncome ? AppColors.income : AppColors.expense,
                     letterSpacing: -1,
                   ),
                   keyboardType: const TextInputType.numberWithOptions(

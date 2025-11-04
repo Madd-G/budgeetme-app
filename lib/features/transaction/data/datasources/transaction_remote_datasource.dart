@@ -14,7 +14,7 @@ class TransactionRemoteDataSource {
 
   Future<int> createTransaction(TransactionRequestModel request) async {
     try {
-      final response = await _apiClient.post<Map<String, dynamic>>(
+      final response = await _apiClient.post(
         AppConstants.transactionsEndpoint,
         data: request.toJson(),
       );
@@ -35,7 +35,7 @@ class TransactionRemoteDataSource {
     required TransactionRequestModel request,
   }) async {
     try {
-      await _apiClient.put<Map<String, dynamic>>(
+      await _apiClient.put(
         AppConstants.transactionDetailPath(id),
         data: request.toJson(),
       );
@@ -48,9 +48,7 @@ class TransactionRemoteDataSource {
 
   Future<void> deleteTransaction(int id) async {
     try {
-      await _apiClient.delete<Map<String, dynamic>>(
-        AppConstants.transactionDetailPath(id),
-      );
+      await _apiClient.delete(AppConstants.transactionDetailPath(id));
     } on DioException catch (error) {
       throw NetworkException('Failed to delete transaction', cause: error);
     } catch (error) {

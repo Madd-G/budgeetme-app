@@ -15,9 +15,8 @@ class DateHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
+    final colorScheme = context.colorScheme;
+
     return Material(
       color: colorScheme.surface,
       child: InkWell(
@@ -34,26 +33,28 @@ class DateHeader extends StatelessWidget {
                 child: Icon(
                   Icons.chevron_right_rounded,
                   size: 20,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(
-                    alpha: 0.6,
-                  ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   dateLabel,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: AppFont.titleSmall.copyWith(
                     fontWeight: AppFont.bold,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(
-                      alpha: 0.7,
-                    ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ),
               Icon(
-                isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
-                color: Theme.of(context).colorScheme.primary,
+                isExpanded
+                    ? Icons.expand_less_rounded
+                    : Icons.expand_more_rounded,
+                color: colorScheme.primary,
                 size: 20,
               ),
             ],

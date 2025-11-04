@@ -1,6 +1,7 @@
-import 'package:budgeetme/core/theme/theme.dart';
+import 'package:budgeetme/core/theme/app_colors.dart';
 import 'package:budgeetme/core/theme/provider/theme_provider.dart';
 import 'package:budgeetme/core/utils/date_grouper.dart';
+import 'package:budgeetme/core/widgets/app_snackbar.dart';
 import 'package:budgeetme/core/widgets/error_view.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
 import 'package:budgeetme/features/dashboard/presentation/providers/expanded_days/expanded_days_provider.dart';
@@ -8,11 +9,9 @@ import 'package:budgeetme/features/dashboard/presentation/providers/transaction_
 import 'package:budgeetme/features/transaction/presentation/providers/transaction_manage/transaction_manage_provider.dart';
 import 'package:budgeetme/features/dashboard/presentation/providers/transaction_summary/transaction_summary_provider.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/appbar_title.dart';
-import 'package:budgeetme/features/dashboard/presentation/widgets/category_filter_bar.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/empty_transaction_list.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/grouped_transaction_list.dart';
-import 'package:budgeetme/features/dashboard/presentation/widgets/loading_shimmer.dart';
-import 'package:budgeetme/features/dashboard/presentation/widgets/summary_card.dart';
+import 'package:budgeetme/features/dashboard/presentation/widgets/dashboard_loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -54,7 +53,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   Widget build(BuildContext context) {
     final transactionsValue = ref.watch(transactionListProvider);
     final summaryValue = ref.watch(transactionSummaryProvider);
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = context.colorScheme;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -114,9 +113,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                       // Auto-expand all days on first load
                       if (groupedTransactions.isNotEmpty) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          ref.read(expandedDaysProvider.notifier).initializeIfNeeded(
-                            groupedTransactions.map((g) => g.dateLabel).toList(),
-                          );
+                          ref
+                              .read(expandedDaysProvider.notifier)
+                              .initializeIfNeeded(
+                                groupedTransactions
+                                    .map((g) => g.dateLabel)
+                                    .toList(),
+                              );
                         });
                       }
 
@@ -127,38 +130,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                         onTransactionDelete: _deleteTransaction,
                       );
                     },
-                    loading: () => _buildLoadingSliver(),
-                    error: (_, __) => _buildLoadingSliver(),
+                    loading: () => const DashboardLoadingView(),
+                    error: (_, __) => const DashboardLoadingView(),
                   );
                 },
                 loading: () => summaryValue.when(
-                  data: (summary) => SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 24),
-                          child: SummaryCard(summary: summary),
-                        );
-                      }
-                      if (index == 1) {
-                        return const CategoryFilterBar();
-                      }
-                      return const ShimmerTransactionItem();
-                    }, childCount: 8),
-                  ),
-                  loading: () => _buildLoadingSliver(),
-                  error: (_, __) => _buildLoadingSliver(),
+                  data: (summary) =>
+                      DashboardLoadingView(summary: summary, isLoading: false),
+                  loading: () => const DashboardLoadingView(),
+                  error: (_, __) => const DashboardLoadingView(),
                 ),
                 error: (error, _) => SliverFillRemaining(
-                    child: ErrorView(
-                      error: error,
-                      onRetry: () =>
-                          ref.read(transactionListProvider.notifier).refresh(),
-                    ),
+                  child: ErrorView(
+                    error: error,
+                    onRetry: () =>
+                        ref.read(transactionListProvider.notifier).refresh(),
                   ),
                 ),
               ),
-            ],
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -166,22 +157,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
           context.push('/transaction-form');
         },
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Tambah'),
+        label: const Text("Tambah"),
       ),
-    );
-  }
-
-  Widget _buildLoadingSliver() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        if (index == 0) {
-          return const ShimmerSummaryCard();
-        }
-        if (index == 1) {
-          return const CategoryFilterBar();
-        }
-        return const ShimmerTransactionItem();
-      }, childCount: 8),
     );
   }
 
@@ -191,7 +168,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
   Future<void> _deleteTransaction(Transaction transaction) async {
     try {
-      // Update the list first to remove headers if needed
       final listNotifier = ref.read(transactionListProvider.notifier);
       listNotifier.removeById(transaction.id);
 
@@ -200,43 +176,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
       if (!mounted) return;
 
-      // Refresh list to ensure server state is synced
       await listNotifier.refresh();
       if (!mounted) return;
 
       if (context.mounted) {
-        final colorScheme = Theme.of(context).colorScheme;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle_rounded, color: colorScheme.onPrimary),
-                const SizedBox(width: 12),
-                const Text('Transaksi berhasil dihapus'),
-              ],
-            ),
-            backgroundColor: AppColors.success,
-            behavior: SnackBarBehavior.floating,
-          ),
+        AppSnackbar.showSuccess(
+          context,
+          message: "Transaksi berhasil dihapus",
         );
       }
     } catch (error) {
       if (!mounted) return;
 
       if (context.mounted) {
-        final colorScheme = Theme.of(context).colorScheme;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error_rounded, color: colorScheme.onError),
-                const SizedBox(width: 12),
-                Expanded(child: Text('Gagal menghapus: $error')),
-              ],
-            ),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-          ),
+        AppSnackbar.showError(
+          context,
+          message: 'Gagal menghapus transaksi: $error',
         );
       }
 

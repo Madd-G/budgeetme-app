@@ -23,7 +23,4 @@ class TransactionConstants {
     'Pendidikan',
     'Lainnya',
   ];
-
-  static const double minAmount = 0.01;
-  static const double maxAmount = 999999999.99;
 }

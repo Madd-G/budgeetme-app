@@ -15,13 +15,13 @@ const transactionSummaryProvider = TransactionSummaryProvider._();
 final class TransactionSummaryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<TransactionSummary>,
-          TransactionSummary,
-          FutureOr<TransactionSummary>
+          AsyncValue<DashboardTransactionSummary>,
+          DashboardTransactionSummary,
+          FutureOr<DashboardTransactionSummary>
         >
     with
-        $FutureModifier<TransactionSummary>,
-        $FutureProvider<TransactionSummary> {
+        $FutureModifier<DashboardTransactionSummary>,
+        $FutureProvider<DashboardTransactionSummary> {
   const TransactionSummaryProvider._()
     : super(
         from: null,
@@ -38,12 +38,12 @@ final class TransactionSummaryProvider
 
   @$internal
   @override
-  $FutureProviderElement<TransactionSummary> $createElement(
+  $FutureProviderElement<DashboardTransactionSummary> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<TransactionSummary> create(Ref ref) {
+  FutureOr<DashboardTransactionSummary> create(Ref ref) {
     return transactionSummary(ref);
   }
 }

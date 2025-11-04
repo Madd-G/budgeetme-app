@@ -2,17 +2,12 @@ import 'package:budgeetme/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class DeleteButton extends StatelessWidget {
-  const DeleteButton({
-    required this.onPressed,
-    super.key,
-  });
+  const DeleteButton({required this.onPressed, super.key});
 
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SizedBox(
       height: 56,
       child: OutlinedButton(
@@ -28,7 +23,7 @@ class DeleteButton extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Hapus Transaksi',
-              style: theme.textTheme.titleMedium?.copyWith(
+              style: AppFont.titleMedium.copyWith(
                 color: AppColors.expense,
                 fontWeight: AppFont.semiBold,
               ),

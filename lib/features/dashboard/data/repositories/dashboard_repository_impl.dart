@@ -1,6 +1,6 @@
 import 'package:budgeetme/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
-import 'package:budgeetme/features/dashboard/domain/entities/dashboard_summary.dart';
-import 'package:budgeetme/features/dashboard/domain/entities/transaction_filter.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_filter.dart';
 import 'package:budgeetme/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,9 +19,9 @@ class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardRemoteDataSource _dataSource;
 
   @override
-  Future<DashboardSummary> fetchSummary({TransactionFilter? filter}) async {
+  Future<DashboardTransactionSummary> fetchSummary({DashboardTransactionFilter? filter}) async {
     final data = await _dataSource.fetchSummary();
-    return DashboardSummary(
+    return DashboardTransactionSummary(
       totalIncome: data.income,
       totalExpense: data.expenses,
       balance: data.balance,
@@ -30,7 +30,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   @override
   Future<List<Transaction>> fetchTransactions({
-    TransactionFilter? filter,
+    DashboardTransactionFilter? filter,
   }) async {
     final data = filter?.categoryId != null
         ? await _dataSource.fetchTransactionsByCategory(
@@ -42,9 +42,9 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  Future<DashboardSummary> fetchCategorySummary(int categoryId) async {
+  Future<DashboardTransactionSummary> fetchCategorySummary(int categoryId) async {
     final data = await _dataSource.fetchCategorySummary(categoryId);
-    return DashboardSummary(
+    return DashboardTransactionSummary(
       totalIncome: data.income,
       totalExpense: data.expenses,
       balance: data.balance,

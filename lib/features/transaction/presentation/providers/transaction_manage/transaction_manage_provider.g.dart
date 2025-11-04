@@ -45,6 +45,7 @@ String _$transactionManageHash() => r'323a4b6a1a5bac6ca613b2883398fd29858b2dd6';
 
 abstract class _$TransactionManage extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build();
+
   @$mustCallSuper
   @override
   void runBuild() {

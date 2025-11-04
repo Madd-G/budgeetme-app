@@ -1,6 +1,7 @@
 import 'package:budgeetme/core/extensions/date_time_extensions.dart';
 import 'package:budgeetme/core/extensions/number_extensions.dart';
 import 'package:budgeetme/core/theme/theme.dart';
+import 'package:budgeetme/core/widgets/confirmation_dialog.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = context.colorScheme;
     final isIncome = transaction.isIncome;
     final amountColor = isIncome ? AppColors.income : AppColors.expense;
 
@@ -64,7 +64,7 @@ class TransactionItem extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       'Hapus',
-                      style: textTheme.labelMedium?.copyWith(
+                      style: AppFont.labelMedium.copyWith(
                         color: colorScheme.onError,
                         fontWeight: AppFont.semiBold,
                       ),
@@ -106,20 +106,12 @@ class TransactionItem extends StatelessWidget {
                               end: Alignment.bottomRight,
                               colors: isIncome
                                   ? [
-                                      AppColors.income.withValues(
-                                        alpha: 0.15,
-                                      ),
-                                      AppColors.income.withValues(
-                                        alpha: 0.25,
-                                      ),
+                                      AppColors.income.withValues(alpha: 0.15),
+                                      AppColors.income.withValues(alpha: 0.25),
                                     ]
                                   : [
-                                      AppColors.expense.withValues(
-                                        alpha: 0.15,
-                                      ),
-                                      AppColors.expense.withValues(
-                                        alpha: 0.25,
-                                      ),
+                                      AppColors.expense.withValues(alpha: 0.15),
+                                      AppColors.expense.withValues(alpha: 0.25),
                                     ],
                             ),
                             borderRadius: BorderRadius.circular(16),
@@ -139,7 +131,7 @@ class TransactionItem extends StatelessWidget {
                             children: [
                               Text(
                                 transaction.title,
-                                style: textTheme.titleMedium?.copyWith(
+                                style: AppFont.titleMedium.copyWith(
                                   fontWeight: AppFont.semiBold,
                                   color: colorScheme.onSurface,
                                 ),
@@ -159,7 +151,7 @@ class TransactionItem extends StatelessWidget {
                                   const SizedBox(width: 4),
                                   Text(
                                     transaction.date.toShortDateFormat(),
-                                    style: textTheme.bodySmall?.copyWith(
+                                    style: AppFont.bodySmall.copyWith(
                                       color: colorScheme.onSurface.withValues(
                                         alpha: 0.6,
                                       ),
@@ -171,7 +163,7 @@ class TransactionItem extends StatelessWidget {
                                 const SizedBox(height: 4),
                                 Text(
                                   transaction.description ?? '',
-                                  style: textTheme.bodySmall?.copyWith(
+                                  style: AppFont.bodySmall.copyWith(
                                     color: colorScheme.onSurface.withValues(
                                       alpha: 0.5,
                                     ),
@@ -190,7 +182,7 @@ class TransactionItem extends StatelessWidget {
                           children: [
                             Text(
                               '${isIncome ? '+' : '-'} ${transaction.amount.toRupiah()}',
-                              style: textTheme.titleMedium?.copyWith(
+                              style: AppFont.titleMedium.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: amountColor,
                                 letterSpacing: -0.5,
@@ -211,28 +203,11 @@ class TransactionItem extends StatelessWidget {
   }
 
   Future<bool?> _confirmDelete(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Hapus Transaksi'),
-        content: const Text(
-          'Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Batal'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.expense,
-            ),
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
+    return ConfirmationDialog.show(
+      context,
+      title: "Hapus Transaksi",
+      message: "Transaksi yang dihapus tidak dapat dikembalikan",
+      isDestructive: true,
     );
   }
 }

@@ -19,8 +19,7 @@ class FilterChipWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final effectiveColor = color ?? theme.colorScheme.primary;
+    final effectiveColor = color ?? context.colorScheme.primary;
 
     return InkWell(
       onTap: onTap,
@@ -32,12 +31,14 @@ class FilterChipWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? effectiveColor.withValues(alpha: 0.15)
-              : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              : context.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? effectiveColor
-                : theme.colorScheme.outline.withValues(alpha: 0.2),
+                : context.colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -50,16 +51,16 @@ class FilterChipWidget extends StatelessWidget {
                 size: 18,
                 color: isSelected
                     ? effectiveColor
-                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    : context.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               const SizedBox(width: 6),
             ],
             Text(
               label,
-              style: theme.textTheme.labelLarge?.copyWith(
+              style: AppFont.labelLarge.copyWith(
                 color: isSelected
                     ? effectiveColor
-                    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    : context.colorScheme.onSurface.withValues(alpha: 0.7),
                 fontWeight: isSelected ? AppFont.bold : AppFont.medium,
               ),
             ),

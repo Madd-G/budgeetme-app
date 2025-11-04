@@ -1,5 +1,5 @@
 import 'package:budgeetme/core/widgets/empty_state.dart';
-import 'package:budgeetme/features/transaction/domain/entities/transaction_summary.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/category_filter_bar.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/summary_card.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class EmptyTransactionList extends StatelessWidget {
     super.key,
   });
 
-  final TransactionSummary summary;
+  final DashboardTransactionSummary summary;
 
   @override
   Widget build(BuildContext context) {

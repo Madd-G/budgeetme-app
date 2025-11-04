@@ -55,4 +55,4 @@ final class DashboardRepositoryProvider
 }
 
 String _$dashboardRepositoryHash() =>
-    r'8863608b802534083329c73360551cbaf46ac035';
+    r'5dfc1ec4553d9e33e408de17635d517d4be78f29';

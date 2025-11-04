@@ -1,6 +1,8 @@
-import 'package:budgeetme/core/theme/theme.dart';
 import 'package:budgeetme/core/extensions/number_extensions.dart';
+import 'package:budgeetme/core/theme/app_colors.dart';
 import 'package:budgeetme/core/utils/currency_input_formatter.dart';
+import 'package:budgeetme/core/widgets/app_snackbar.dart';
+import 'package:budgeetme/core/widgets/confirmation_dialog.dart';
 import 'package:budgeetme/features/transaction/domain/constants/transaction_constants.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction_type.dart';
@@ -90,8 +92,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen>
       _onManageStateChanged,
     );
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = context.colorScheme;
     final manageState = ref.watch(transactionManageProvider);
     final isIncome = _selectedType == TransactionType.income;
 
@@ -186,11 +187,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen>
     );
   }
 
-
   Future<void> _handleSubmit() async {
     if (_amountController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Jumlah transaksi tidak boleh kosong')),
+      AppSnackbar.showError(
+        context,
+        message: "Jumlah transaksi tidak boleh kosong",
       );
       _amountFocusNode.requestFocus();
       return;
@@ -198,9 +199,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen>
 
     final amount = CurrencyInputFormatter.parse(_amountController.text);
     if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Masukkan jumlah yang valid')),
-      );
+      AppSnackbar.showError(context, message: "Masukkan jumlah yang valid");
       _amountFocusNode.requestFocus();
       return;
     }
@@ -230,28 +229,11 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen>
   }
 
   Future<void> _handleDelete() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Hapus Transaksi'),
-        content: const Text(
-          'Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Batal'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.expense,
-            ),
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: "Hapus Transaksi",
+      message: "Transaksi yang dihapus tidak dapat dikembalikan",
+      isDestructive: true,
     );
 
     if (confirmed == true && mounted) {
@@ -274,41 +256,21 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen>
 
         if (!mounted) return;
 
-        final colorScheme = Theme.of(context).colorScheme;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle_rounded, color: colorScheme.onPrimary),
-                const SizedBox(width: 12),
-                Text(
-                  _isEditing
-                      ? 'Transaksi berhasil diperbarui'
-                      : 'Transaksi berhasil ditambahkan',
-                ),
-              ],
-            ),
-            backgroundColor: AppColors.income,
-          ),
+        AppSnackbar.showSuccess(
+          context,
+          message: _isEditing
+              ? "Transaksi berhasil diperbarui"
+              : "Transaksi berhasil ditambahkan",
         );
         if (Navigator.of(context).canPop()) {
           context.pop();
         }
       },
       error: (error, _) {
-        final colorScheme = Theme.of(context).colorScheme;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error_rounded, color: colorScheme.onError),
-                const SizedBox(width: 12),
-                Expanded(child: Text('Gagal menyimpan transaksi: $error')),
-              ],
-            ),
-            backgroundColor: AppColors.expense,
-          ),
-        );
+        final errorMessage = _isEditing
+            ? "Gagal memperbarui transaksi"
+            : "Gagal menambah transaksi";
+        AppSnackbar.showError(context, message: '$errorMessage: $error');
       },
     );
   }

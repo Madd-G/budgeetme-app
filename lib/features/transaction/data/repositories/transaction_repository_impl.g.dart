@@ -55,4 +55,4 @@ final class TransactionRepositoryProvider
 }
 
 String _$transactionRepositoryHash() =>
-    r'3fcca8c9733727713111dbcbb75177bdfcab6a2e';
+    r'078fb721b9d7c07f1dfd0ab624fc8fd51b2e3e3a';

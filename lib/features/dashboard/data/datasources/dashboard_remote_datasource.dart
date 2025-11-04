@@ -4,7 +4,7 @@ import 'package:budgeetme/core/constants/app_constants.dart';
 import 'package:budgeetme/core/exceptions/app_exception.dart';
 import 'package:budgeetme/core/network/api_client.dart';
 import 'package:budgeetme/features/transaction/data/models/transaction_model.dart';
-import 'package:budgeetme/features/transaction/data/models/transaction_summary_model.dart';
+import 'package:budgeetme/features/dashboard/data/models/dashboard_summary_model.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,16 +15,14 @@ class DashboardRemoteDataSource {
 
   final ApiClient _apiClient;
 
-  Future<TransactionSummaryModel> fetchSummary() async {
+  Future<DashboardSummaryModel> fetchSummary() async {
     try {
-      final response = await _apiClient.get<Map<String, dynamic>>(
-        AppConstants.transactionsSummary,
-      );
+      final response = await _apiClient.get(AppConstants.transactionsSummary);
       final json = response.data;
       if (json == null) {
         throw ApiException('Empty response loading transaction summary');
       }
-      return TransactionSummaryModel.fromJson(json);
+      return DashboardSummaryModel.fromJson(json);
     } on DioException catch (error) {
       throw NetworkException(
         'Failed to load transaction summary',
@@ -40,7 +38,7 @@ class DashboardRemoteDataSource {
 
   Future<List<TransactionModel>> fetchTransactions({int page = 1}) async {
     try {
-      final response = await _apiClient.get<Map<String, dynamic>>(
+      final response = await _apiClient.get(
         '${AppConstants.transactionsPaginated}?page=$page',
       );
       final data = response.data;
@@ -71,7 +69,7 @@ class DashboardRemoteDataSource {
     int page = 1,
   }) async {
     try {
-      final response = await _apiClient.get<Map<String, dynamic>>(
+      final response = await _apiClient.get(
         '${AppConstants.transactionsByCategoryPath(categoryId)}?page=$page',
       );
       final data = response.data;
@@ -96,16 +94,16 @@ class DashboardRemoteDataSource {
     }
   }
 
-  Future<TransactionSummaryModel> fetchCategorySummary(int categoryId) async {
+  Future<DashboardSummaryModel> fetchCategorySummary(int categoryId) async {
     try {
-      final response = await _apiClient.get<Map<String, dynamic>>(
+      final response = await _apiClient.get(
         AppConstants.transactionsCategorySummaryPath(categoryId),
       );
       final json = response.data;
       if (json == null) {
         throw ApiException('Empty response loading category summary');
       }
-      return TransactionSummaryModel.fromJson(json);
+      return DashboardSummaryModel.fromJson(json);
     } on DioException catch (error) {
       throw NetworkException('Failed to load category summary', cause: error);
     } catch (error) {
@@ -118,7 +116,7 @@ class DashboardRemoteDataSource {
 
   Future<TransactionModel> fetchTransactionDetail(int id) async {
     try {
-      final response = await _apiClient.get<Map<String, dynamic>>(
+      final response = await _apiClient.get(
         AppConstants.transactionDetailPath(id),
       );
       final json = response.data;

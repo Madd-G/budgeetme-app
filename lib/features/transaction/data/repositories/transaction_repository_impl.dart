@@ -4,7 +4,6 @@ import 'package:budgeetme/features/dashboard/data/datasources/dashboard_remote_d
 import 'package:budgeetme/features/transaction/data/datasources/transaction_remote_datasource.dart';
 import 'package:budgeetme/features/transaction/data/models/transaction_model.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
-import 'package:budgeetme/features/transaction/domain/entities/transaction_summary.dart';
 import 'package:budgeetme/features/transaction/domain/repositories/transaction_repository.dart';
 
 part 'transaction_repository_impl.g.dart';
@@ -33,12 +32,6 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<List<Transaction>> fetchTransactions() async {
-    final data = await _dashboardDataSource.fetchTransactions();
-    return data.map((d) => d.toEntity()).toList();
-  }
-
-  @override
   Future<Transaction> updateTransaction(Transaction transaction) async {
     final request = TransactionRequestModel.fromTransaction(transaction);
     await _transactionDataSource.updateTransaction(
@@ -50,21 +43,6 @@ class TransactionRepositoryImpl implements TransactionRepository {
     );
 
     return detail.toEntity();
-  }
-
-  @override
-  TransactionSummary buildSummary(List<Transaction> transactions) {
-    final income = transactions
-        .where((transaction) => transaction.isIncome)
-        .fold<double>(0, (prev, transaction) => prev + transaction.amount);
-    final expense = transactions
-        .where((transaction) => !transaction.isIncome)
-        .fold<double>(0, (prev, transaction) => prev + transaction.amount);
-    return TransactionSummary(
-      totalIncome: income,
-      totalExpense: expense,
-      balance: income - expense,
-    );
   }
 }
 

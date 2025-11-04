@@ -1,6 +1,6 @@
 import 'package:budgeetme/core/utils/date_grouper.dart';
 import 'package:budgeetme/features/transaction/domain/entities/transaction.dart';
-import 'package:budgeetme/features/transaction/domain/entities/transaction_summary.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/category_filter_bar.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/expandable_day_group.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/transaction_history_header.dart';
@@ -16,7 +16,7 @@ class GroupedTransactionList extends StatelessWidget {
     super.key,
   });
 
-  final TransactionSummary summary;
+  final DashboardTransactionSummary summary;
   final List<GroupedTransaction> groupedTransactions;
   final Function(Transaction) onTransactionTap;
   final Function(Transaction) onTransactionDelete;

@@ -17,14 +17,14 @@ class CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = context.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Kategori',
-          style: theme.textTheme.titleSmall?.copyWith(
+          style: AppFont.titleSmall.copyWith(
             fontWeight: AppFont.semiBold,
           ),
         ),
@@ -34,7 +34,7 @@ class CategorySelector extends StatelessWidget {
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.category_rounded,
-              color: theme.colorScheme.primary,
+              color: colorScheme.primary,
             ),
           ),
           items: categories

@@ -79,13 +79,13 @@ Menggunakan Riverpod untuk fetch data:
 ```dart
 // Provider untuk fetch data
 @riverpod
-Future<DashboardSummary> transactionSummary(Ref ref) async {
+Future<DashboardSummary> dashboardTransactionSummary(Ref ref) async {
   final repository = ref.watch(dashboardRepositoryProvider);
   return repository.fetchSummary();
 }
 
 // Di widget
-final summary = ref.watch(transactionSummaryProvider);
+final summary = ref.watch(dashboardTransactionSummaryProvider);
 summary.when(
   data: (data) => Text(data.balance.toFormattedCurrency()),
   loading: () => CircularProgressIndicator(),
@@ -134,7 +134,7 @@ Abstraksi data source untuk fetch:
 ```dart
 // Interface (domain/repositories)
 abstract class DashboardRepository {
-  Future<DashboardSummary> fetchSummary();
+  Future<DashboardTransactionSummary> fetchSummary();
   Future<List<Transaction>> fetchTransactions();
 }
 
@@ -143,9 +143,9 @@ class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardRemoteDataSource _dataSource;
   
   @override
-  Future<DashboardSummary> fetchSummary() async {
+  Future<DashboardTransactionSummary> fetchSummary() async {
     final dto = await _dataSource.fetchSummary();
-    return DashboardSummary(
+    return DashboardTransactionSummary(
       totalIncome: dto.income,
       totalExpense: dto.expenses,
       balance: dto.balance,

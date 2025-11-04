@@ -1,3 +1,4 @@
+import 'package:budgeetme/core/theme/app_font.dart';
 import 'package:flutter/material.dart';
 
 class AppBarTitle extends StatelessWidget {
@@ -15,7 +16,7 @@ class AppBarTitle extends StatelessWidget {
               ? Text(
                   'BudgeetMe',
                   key: const ValueKey('title'),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: AppFont.headlineSmall.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -26,18 +27,17 @@ class AppBarTitle extends StatelessWidget {
                   children: [
                     Text(
                       'BudgeetMe',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: AppFont.headlineSmall.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Kelola keuangan Anda',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
+                      style: AppFont.bodySmall.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],

@@ -1,3 +1,5 @@
+import 'package:budgeetme/core/theme/app_colors.dart';
+import 'package:budgeetme/core/theme/app_font.dart';
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
@@ -16,8 +18,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = context.colorScheme;
 
     return Center(
       child: Padding(
@@ -25,29 +26,18 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 88,
-              color: colorScheme.primary,
-            ),
+            Icon(icon, size: 88, color: colorScheme.primary),
             const SizedBox(height: 16),
-            Text(
-              title,
-              style: textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
+            Text(title, style: AppFont.titleMedium, textAlign: TextAlign.center),
             if (message != null) ...[
               const SizedBox(height: 8),
               Text(
                 message!,
-                style: textTheme.bodyMedium,
+                style: AppFont.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ],
-            if (action != null) ...[
-              const SizedBox(height: 24),
-              action!,
-            ],
+            if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
       ),

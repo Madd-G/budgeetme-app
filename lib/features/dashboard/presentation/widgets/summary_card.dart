@@ -1,18 +1,19 @@
 import 'package:budgeetme/core/theme/theme.dart';
 import 'package:budgeetme/core/extensions/number_extensions.dart';
-import 'package:budgeetme/features/transaction/domain/entities/transaction_summary.dart';
+import 'package:budgeetme/features/dashboard/domain/entities/dashboard_transaction_summary.dart';
 import 'package:budgeetme/features/dashboard/presentation/widgets/stat_card_detail_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SummaryCard extends StatelessWidget {
-  const SummaryCard({required this.summary, super.key});
+  const SummaryCard({required this.summary, this.isLoading = false, super.key});
 
-  final TransactionSummary summary;
+  final DashboardTransactionSummary summary;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = context.colorScheme;
     final isPositive = summary.balance >= 0;
 
     return Container(
@@ -40,7 +41,7 @@ class SummaryCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,9 +57,7 @@ class SummaryCard extends StatelessWidget {
                   isPositive
                       ? Icons.trending_up_rounded
                       : Icons.trending_down_rounded,
-                  color: isPositive
-                      ? AppColors.income
-                      : AppColors.expense,
+                  color: isPositive ? AppColors.income : AppColors.expense,
                   size: 24,
                 ),
               ),
@@ -69,20 +68,22 @@ class SummaryCard extends StatelessWidget {
                   children: [
                     Text(
                       'Saldo Anda',
-                      style: textTheme.bodyMedium?.copyWith(
+                      style: AppFont.bodyMedium.copyWith(
                         color: colorScheme.onPrimaryContainer,
                         fontWeight: AppFont.medium,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      summary.balance.toRupiah(),
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
+                    isLoading
+                        ? ShimmerBox(width: 180, height: 32)
+                        : Text(
+                            summary.balance.toRupiah(),
+                            style: AppFont.headlineMedium.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -92,26 +93,22 @@ class SummaryCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildStatCard(
-                  context,
+                child: StatCard(
                   icon: Icons.arrow_downward_rounded,
                   label: 'Pemasukan',
                   amount: summary.totalIncome,
                   color: AppColors.income,
-                  textTheme: textTheme,
-                  colorScheme: colorScheme,
+                  isLoading: isLoading,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildStatCard(
-                  context,
+                child: StatCard(
                   icon: Icons.arrow_upward_rounded,
                   label: 'Pengeluaran',
                   amount: summary.totalExpense,
                   color: AppColors.expense,
-                  textTheme: textTheme,
-                  colorScheme: colorScheme,
+                  isLoading: isLoading,
                 ),
               ),
             ],
@@ -120,16 +117,28 @@ class SummaryCard extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildStatCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required double amount,
-    required Color color,
-    required TextTheme textTheme,
-    required ColorScheme colorScheme,
-  }) {
+class StatCard extends StatelessWidget {
+  const StatCard({
+    required this.icon,
+    required this.label,
+    required this.amount,
+    required this.color,
+    required this.isLoading,
+    super.key,
+  });
+
+  final IconData icon;
+  final String label;
+  final double amount;
+  final Color color;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -159,7 +168,7 @@ class SummaryCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       label,
-                      style: textTheme.bodySmall?.copyWith(
+                      style: AppFont.bodySmall.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
                         fontWeight: AppFont.medium,
                       ),
@@ -174,17 +183,47 @@ class SummaryCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Text(
-                amount.toRupiah(),
-                style: textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
+              isLoading
+                  ? const ShimmerBox(width: 120, height: 24)
+                  : Text(
+                      amount.toRupiah(),
+                      style: AppFont.titleLarge.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.5,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ShimmerBox extends StatelessWidget {
+  const ShimmerBox({required this.width, required this.height, super.key});
+
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+    return Shimmer.fromColors(
+      baseColor: colorScheme.surfaceContainerHighest.withValues(
+        alpha: 0.3,
+      ),
+      highlightColor: colorScheme.surfaceContainerLow.withValues(
+        alpha: 0.5,
+      ),
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
