@@ -2,6 +2,17 @@
 
 Aplikasi expense tracker untuk mencatat pemasukan dan pengeluaran keuangan pribadi. Dibangun dengan Flutter dan menggunakan Clean Architecture.
 
+## Demo
+
+
+
+
+
+https://github.com/user-attachments/assets/0f981bb4-2308-45be-b57f-c3a38860ab69
+
+
+
+
 ## Fitur Utama
 
 - **Dashboard** - Lihat ringkasan saldo, pemasukan, dan pengeluaran
@@ -56,7 +67,10 @@ lib/
 
 ## API Integration
 
-Aplikasi ini menggunakan REST API untuk operasi CRUD transaksi.
+Aplikasi ini menggunakan public REST API untuk operasi CRUD transaksi.
+
+Contoh: https://invenx-backend-app.up.railway.app/transactions
+
 
 **Endpoints yang digunakan:**
 - `GET /transactions/summary` - Ambil ringkasan saldo
